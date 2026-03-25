@@ -1,0 +1,34 @@
+info:
+  name: login pass
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{BaseURL}}/auth/login"
+  body:
+    type: json
+    data: |-
+      {
+        "username": "student",
+        "password": "hungry"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return success", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("should contain accessToken", function () {
+          expect(res.getBody()).to.have.property("accessToken")
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

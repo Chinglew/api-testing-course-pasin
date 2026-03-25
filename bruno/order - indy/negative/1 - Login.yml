@@ -1,0 +1,38 @@
+info:
+  name: 1 - Login
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{BaseURL}}/auth/login"
+  body:
+    type: json
+    data: |-
+      {
+        "username": "student",
+        "password": "hungry"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        if (res.getStatus() === 200) {
+          const data = res.body;
+          bru.setVar("authToken", data.accessToken);
+        } else {
+          console.error("Login failed:", res.getStatusText());
+        }
+    - type: tests
+      code: |-
+        test("should return success", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,27 @@
+info:
+  name: menu param handle
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{BaseURL}}/menu?id=1"
+  params:
+    - name: id
+      value: "1"
+      type: query
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return success", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

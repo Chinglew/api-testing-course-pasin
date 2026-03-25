@@ -1,0 +1,53 @@
+info:
+  name: 3 - Place Order ID 1
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{BaseURL}}/orders"
+  body:
+    type: json
+    data: |-
+      {
+        "itemId": 1,
+        "quantity": 1
+      }
+  auth:
+    type: bearer
+    token: "{{authToken}}"
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const response_login = await bru.runRequest("1 - Login");
+
+        if (response_login.status === 200) {
+          const data = response_login.data;
+          bru.setVar("authToken", data.accessToken);
+          
+          const ressponse_order_fail = await bru.runRequest("2 - Get Order FAIL");
+          if (ressponse_order_fail.status === 200){
+            console.log('Checked order first time - NO ORDER ID')
+          }
+          
+        } else {
+          console.error("Login failed:", response_login.statusText);
+        }
+    - type: tests
+      code: |-
+        test("should return array of menu", function () {
+          const order = res.getBody();
+          
+          expect(order).to.have.property("orderId");
+          expect(order).to.have.property("status");
+          expect(order).to.have.property("totalPrice");
+          expect(order.totalPrice).to.equal(50);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,27 @@
+noodle shop 
+A - login
+B - menu
+C - place order
+D - track order
+
+indy test
+A - PASS, Fail - expiretime 
+B - PASS, another params ?
+C - PASS, Fail (id is missing ,out of stock), order more than 1 thing
+D - PASS, wrong/not exits order id (price correct?)(status created), limit a access (can not test due to only 1 user given)
+
+
+normal flow 
+A - B - C - D /
+
+A - C - D / 
+
+A - D - C - D (may not happand due to unknow Order ID) / 
+
+A - B - C - B - C - D /
+
+*B - C - D / 
+
+*C - D / 
+
+A - D /

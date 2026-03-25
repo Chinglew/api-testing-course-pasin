@@ -1,0 +1,46 @@
+info:
+  name: 2 - Place Order ID 2
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{BaseURL}}/orders"
+  body:
+    type: json
+    data: |-
+      {
+        "itemId": 2,
+        "quantity": 1
+      }
+  auth:
+    type: bearer
+    token: "{{authToken}}"
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const response_login = await bru.runRequest("1 - Login");
+
+        if (response_login.status === 200) {
+          const data = response_login.data;
+          bru.setVar("authToken", data.accessToken);
+          
+        } else {
+          console.error("Login failed:", response_login.statusText);
+        }
+    - type: tests
+      code: |-
+        test("should return error message", function () {
+          const order = res.getBody();
+          
+          expect(order).to.have.property("error");
+          expect(order.error).to.equal("Unauthorized");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

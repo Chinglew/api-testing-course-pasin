@@ -1,0 +1,47 @@
+info:
+  name: 4 - Get Order pass - run test here
+  type: http
+  seq: 4
+
+http:
+  method: GET
+  url: "{{BaseURL}}/orders/{{orderId}}"
+  body:
+    type: json
+    data: ""
+  auth:
+    type: bearer
+    token: "{{authToken}}"
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const response_placed_order = await bru.runRequest("3 - Place Order ID 1")
+        if (response_placed_order.status === 200) {
+          const order_data = response_placed_order.data;
+          bru.setVar("orderId", order_data.orderId);
+        }else{
+          console.error("Order failed:", response_placed_order.statusText);
+        }
+    - type: tests
+      code: |-
+        test("should return success", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("should return order detail correct", function () {
+          const order = res.getBody();
+          
+          expect(order).to.have.property("orderId");
+          expect(order).to.have.property("status");
+          expect(order).to.have.property("totalPrice");
+          expect(order.status).to.equal("created");
+          expect(order.totalPrice).to.equal(50);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

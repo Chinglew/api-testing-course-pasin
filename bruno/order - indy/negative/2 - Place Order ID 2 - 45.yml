@@ -1,0 +1,37 @@
+info:
+  name: 2 - Place Order ID 2 - 45
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{BaseURL}}/orders"
+  body:
+    type: json
+    data: |-
+      {
+        "itemId": 1,
+        "quantity": 1
+      }
+  auth:
+    type: bearer
+    token: "{{authToken}}"
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return array of menu", function () {
+          const order = res.getBody();
+          
+          expect(order).to.have.property("orderId");
+          expect(order).to.have.property("status");
+          expect(order).to.have.property("totalPrice");
+          expect(order.totalPrice).to.equal(50);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

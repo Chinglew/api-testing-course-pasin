@@ -1,0 +1,45 @@
+info:
+  name: 3 - Place Order ID 1
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{BaseURL}}/orders"
+  body:
+    type: json
+    data: |-
+      {
+        "itemId": 1,
+        "quantity": 1
+      }
+  auth:
+    type: bearer
+    token: "{{authToken}}"
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const response_menu = await bru.runRequest("2 - Get menu");
+          if(response_menu.status === 200) {
+          const menu_data = response_menu.data;
+          bru.setVar("checkPrice",menu_data[1].price)
+            
+          }else{
+            console.error("Get menu failed:", response_menu.statusText);
+          }
+    - type: tests
+      code: |-
+        test("should return error message", function () {
+          const order = res.getBody();
+          
+          expect(order).to.have.property("error");
+          expect(order.error).to.equal("Unauthorized");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
