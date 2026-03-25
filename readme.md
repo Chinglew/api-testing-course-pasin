@@ -174,6 +174,6 @@ _Good luck. Auntie Som is counting on you!_ 🍜🔥
 
 ## 🔥Bug list🔥
 
-1.  **Incorrect Price** : ราคาที่ได้จาก Menu และ Order ไม่เท่ากัน
-2.  **Validate Quantity** : สั่ง Order จำนวนมากกว่า Quantity ที่มีอยู่
-3.  **Wrong Status Code** : Error หลายๆตัวตอบกลับด้วย Code 200
+1.  **Incorrect Price** : ราคาที่ได้จาก Menu และ Order ไม่เท่ากัน - Test ด้วยการกำหนดราคาที่ expected ใน Tests
+2.  **Validate Quantity** : สั่ง Order จำนวนมากกว่า Quantity ที่มีอยู่ได้ - Test เจอด้วยการ กำหนด expected Error ที่จะแสดงผลใน Tests
+3.  **Wrong Status Code** : Error หลายๆตัวตอบกลับด้วย Code 200 - Test เจอด้วยการ กำหนด Status code ที่จะแสดงผลเวลาเกิด Error ใน Tests
